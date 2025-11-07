@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعيين Webhook - Set Webhook</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            color: #2e7d32;
+        }
+        .error {
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            color: #c62828;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .code {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            word-break: break-all;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .hint {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 تعيين Webhook للبوت</h1>
+        
+        <div class="info">
+            <p><strong>📌 التوكن الحالي:</strong></p>
+            <div class="code">8075818083:AAG3YIe0z_OObQiR9Ed9jw_pEBahPWNPmoY</div>
+        </div>
+
+        <div class="info">
+            <p><strong>📋 خطوات الاستضافة المجانية:</strong></p>
+            <ol>
+                <li>سجل في <strong>000webhost.com</strong> (مجاني تماماً)</li>
+                <li>ارفع جميع ملفات البوت إلى مجلد <code>public_html</code></li>
+                <li>احصل على رابط موقعك (مثل: <code>mybot.000webhostapp.com</code>)</li>
+                <li>أدخل الرابط أدناه واضغط "تعيين Webhook"</li>
+            </ol>
+        </div>
+
+        <label><strong>🌐 رابط ملف index.php على الخادم:</strong></label>
+        <input type="text" id="webhookUrl" placeholder="https://mybot.000webhostapp.com/index.php" value="">
+        <div class="hint">⚠️ يجب أن يبدأ الرابط بـ https://</div>
+
+        <button onclick="setWebhook()">✅ تعيين Webhook - Set Webhook</button>
+        <button onclick="checkWebhook()" style="background: #2196F3; margin-top: 10px;">🔍 التحقق من Webhook - Check Webhook</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const TOKEN = "8075818083:AAG3YIe0z_OObQiR9Ed9jw_pEBahPWNPmoY";
+
+        async function setWebhook() {
+            const webhookUrl = document.getElementById("webhookUrl").value.trim();
+            const resultDiv = document.getElementById("result");
+            
+            if (!webhookUrl) {
+                resultDiv.innerHTML = '<div class="error">❌ يرجى إدخال رابط Webhook</div>';
+                return;
+            }
+
+            if (!webhookUrl.startsWith("https://")) {
+                resultDiv.innerHTML = '<div class="error">❌ يجب أن يبدأ الرابط بـ https://</div>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<p>جاري التعيين... / Setting...</p>';
+            
+            try {
+                const url = `https://api.telegram.org/bot${TOKEN}/setWebhook?url=${encodeURIComponent(webhookUrl)}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ تم تعيين Webhook بنجاح!</h3>
+                            <p><strong>الرابط / URL:</strong></p>
+                            <div class="code">${webhookUrl}</div>
+                            <p style="margin-top: 15px;">🎉 الآن افتح تليجرام وابحث عن @Gfseeesasgjnbot وأرسل /start</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ فشل تعيين Webhook</h3>
+                            <p><strong>الخطأ / Error:</strong> ${data.description || 'خطأ غير معروف'}</p>
+                            <p style="margin-top: 10px;"><strong>تأكد من:</strong></p>
+                            <ul>
+                                <li>الرابط يبدأ بـ https://</li>
+                                <li>ملف index.php موجود على الخادم</li>
+                                <li>الخادم يدعم HTTPS</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ خطأ في الاتصال</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function checkWebhook() {
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = '<p>جاري التحقق... / Checking...</p>';
+            
+            try {
+                const url = `https://api.telegram.org/bot${TOKEN}/getWebhookInfo`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.ok) {
+                    const info = data.result;
+                    if (info.url) {
+                        resultDiv.innerHTML = `
+                            <div class="success">
+                                <h3>✅ Webhook مفعل</h3>
+                                <p><strong>الرابط / URL:</strong></p>
+                                <div class="code">${info.url}</div>
+                                <p><strong>الرسائل المعلقة / Pending updates:</strong> ${info.pending_update_count || 0}</p>
+                                ${info.last_error_date ? `
+                                    <p style="color: #f57c00;"><strong>⚠️ آخر خطأ:</strong> ${new Date(info.last_error_date * 1000).toLocaleString('ar')}</p>
+                                    <p style="color: #f57c00;">${info.last_error_message || ''}</p>
+                                ` : '<p style="color: #2e7d32;">✅ لا توجد أخطاء</p>'}
+                            </div>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="error">
+                                <h3>⚠️ Webhook غير مفعل</h3>
+                                <p>يجب تعيين Webhook أولاً</p>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ خطأ في الاتصال</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,42 @@
+═══════════════════════════════════════════════════════════
+    دليل البدء السريع - Quick Start Guide
+═══════════════════════════════════════════════════════════
+
+📋 الخطوات الأساسية / Basic Steps:
+
+1️⃣  احصل على توكن البوت من @BotFather
+   Get bot token from @BotFather
+
+2️⃣  احصل على معرفك من @userinfobot
+   Get your ID from @userinfobot
+
+3️⃣  افتح ملف config.php واملأ:
+   Open config.php and fill:
+   
+   $TOKEN = "توكن_البوت";
+   $sudoID = "معرف_المطور";
+   $botUsername = "معرف_البوت";
+
+4️⃣  ارفع الملفات على خادم ويب يدعم PHP
+   Upload files to a web server with PHP support
+
+5️⃣  شغّل سكريبت تعيين Webhook:
+   Run webhook setup script:
+   
+   php set_webhook.php
+   
+   أو يدوياً / Or manually:
+   https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://yourdomain.com/index.php
+
+6️⃣  تحقق من حالة البوت:
+   Check bot status:
+   
+   php check_bot.php
+
+═══════════════════════════════════════════════════════════
+
+📚 للمزيد من التفاصيل، راجع ملف SETUP.md
+For more details, see SETUP.md file
+
+═══════════════════════════════════════════════════════════
+
